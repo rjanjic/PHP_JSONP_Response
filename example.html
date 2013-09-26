@@ -1,0 +1,197 @@
+<html>
+<head>
+	<script type="text/javascript" src="JSONP.js"></script>
+	<script type="text/javascript">
+	/*
+	* Change: http://www.it-radionica.com/JSONP/captcha.php
+	* to: e.g. your localhot http://localhost/JSONP/captcha.php
+	* if you want to make requests to captcha.php script from this package.
+	*/
+	
+	/* EXAMPLE 1 
+	* Request using function name as string
+	*************************************************************************************************************/
+
+	// Example function
+	function exampleFunction(captcha) {
+		if (captcha) {
+			alert('EXAMPLE 1: captcha is correct.')
+		} else {
+			alert('EXAMPLE 1: captcha is incorrect!')
+		}
+	}
+
+	// Make object instance 
+	var JSONP_EXAMPLE1 = new JSONP('http://www.it-radionica.com/JSONP/captcha.php', 'exampleFunction');
+
+	function checkExample1() {
+		// Call metod request
+		JSONP_EXAMPLE1.request(
+			// Pareameters to send
+			{
+				/* Simple key val
+				* expected: 1
+				*/
+				expected: document.getElementById('example1').value
+			}
+			
+			/* Function name can be used here as well
+			
+			, 'exampleFunction'
+			
+			*/
+		);
+	}
+
+	/* EXAMPLE 2 
+	* Request using lambda function
+	*************************************************************************************************************/
+
+	// Make object instance 
+	var JSONP_EXAMPLE2 = new JSONP(
+		// URL to request
+		'http://www.it-radionica.com/JSONP/captcha.php', 
+		
+		// Lambda function
+		function (captcha) {
+			if (captcha) {
+				alert('EXAMPLE 2: captcha is correct.')
+			} else {
+				alert('EXAMPLE 2: captcha is incorrect!')
+			}
+		}
+	);
+
+	function checkExample2() {
+		// Call metod request
+		JSONP_EXAMPLE2.request(
+			// Pareameters to send
+			{
+				/* Simple key val
+				* expected: 1
+				*/
+				expected: document.getElementById('example2').value
+			}
+			
+			/* Function name can be used here as well
+			
+			, 'exampleFunction'
+			
+			*/
+		);
+	}
+
+	/* EXAMPLE 3 
+	* All types of request parameters and lambda function
+	*************************************************************************************************************/
+
+	// Make object instance 
+	var JSONP_EXAMPLE3 = new JSONP('http://www.it-radionica.com/JSONP/captcha.php');
+
+	function checkExample3() {
+		// Call metod request
+		JSONP_EXAMPLE3.request(
+			// Pareameters to send
+			{
+				/* Simple key val
+				* expected: 1
+				*/
+				
+				expected: document.getElementById('example3').value, 
+				
+				/* Object will be interpreted as associative array in query string
+				* param2[asdf1]:1
+				* param2[asdf2]:2
+				* param2[asdf3][asdff1]:1
+				* param2[asdf3][asdff2]:2
+				*/
+				param2: {asdf1: 1, asdf2: 2, asdf3: {asdff1: 1, asdff2: 2 /* , asdff3: { ... }*/}}, 
+				
+				/* Array
+				* param3[0]:1
+				* param3[1]:2
+				* param3[2]:3
+				*/
+				param3:[1, 2, 3]
+				
+			},
+			
+			// Callback function
+			function (captcha) {
+				if (captcha) {
+					alert('EXAMPLE 3: captcha is correct.')
+				} else {
+					alert('EXAMPLE 3: captcha is incorrect!')
+				}
+			}
+			/* So request URL will look like this:
+			http://www.it-radionica.com/JSONP/captcha.php?callback=FUNC_JSONP_1329400&expected=&param2%5Basdf1%5D=1&param2%5Basdf2%5D=2&param2%5Basdf3%5D%5Basdff1%5D=1&param2%5Basdf3%5D%5Basdff2%5D=2&param3%5B0%5D=1&param3%5B1%5D=2&param3%5B2%5D=3
+			*/
+		);
+	}
+	</script>
+</head>
+<body>
+	<table>
+		<tr><td>Package:</td><td>JSONP</td></tr>
+		<tr><td>Author:</td><td>Radovan Janjic <a href="mailto:rade@it-radionica.com">rade@it-radionica.com</a></td></tr>
+		<tr><td>Version:</td><td>1.0</td></tr>
+		<tr><td>Copyright (C):</td><td>2013 IT-radionica.com, All Rights Reserved</td></tr>
+		<tr><td>License:</td><td><a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2, June 1991)</a></td></tr>
+	</table>
+
+	<p>
+	JSONP or "JSON with padding" is a communication technique<br />
+	used in JavaScript programs which run in Web browsers.<br />
+	It provides a method to request data from a server in a different domain,<br />
+	something prohibited by typical web browsers because of the same origin policy.<br />
+	Read more on: <a href="http://en.wikipedia.org/wiki/JSONP" target="_blank">http://en.wikipedia.org/wiki/JSONP</a>.
+	</p>
+	
+	<hr />
+	
+	<p>JSONP Examples:</p>
+	
+	<p></p>
+	<table>
+		<tr>
+			<td colspan="2">
+				<span style="line-height: 35px; display: inline-block; float: left;">CAPTCHA:</span> 
+				<img style="padding: 5px" src="http://www.it-radionica.com/JSONP/captcha.php" />
+			</td>
+		</tr>
+
+		<!-- EXAMPLE 1 -->
+		<tr>
+			<td>
+				<input type="text" id="example1" />
+			</td>
+			<td>
+				<button onclick="javascript:checkExample1();">Example 1</button>
+			</td>
+		</tr>
+
+		<!-- EXAMPLE 2 -->
+		<tr>
+			<td>
+				<input type="text" id="example2" />
+			</td>
+			<td>
+				<button onclick="javascript:checkExample2();">Example 2</button>
+			</td>
+		</tr>
+
+		<!-- EXAMPLE 3 -->
+		<tr>
+			<td>
+				<input type="text" id="example3" />
+			</td>
+			<td>
+				<button onclick="javascript:checkExample3();">Example 3</button>
+			</td>
+		</tr>
+	</table>
+	<p>Look at the source code for more info.</p>
+	<p>If you have any questions or suggestions feel free to contact me on my email.</p>
+</body>
+</html>
