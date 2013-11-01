@@ -1,5 +1,6 @@
 <html>
 <head>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript" src="JSONP.js"></script>
 	<script type="text/javascript">
 	/*
@@ -129,6 +130,27 @@
 			*/
 		);
 	}
+	
+	/* EXAMPLE 4 
+	* jQuery example
+	*************************************************************************************************************/
+	
+	$(document).ready(function() {
+		$('#btn-example4').click(function() {
+			$.ajax({
+				url: 'http://www.it-radionica.com/JSONP/captcha.php',
+				dataType: 'jsonp',
+				data: {expected: document.getElementById('example4').value},
+				success: function(captcha) {
+					if (captcha) {
+						alert('EXAMPLE 4: captcha is correct.');
+					} else {
+						alert('EXAMPLE 4: captcha is incorrect!');
+					}
+				}
+			});
+		});
+	});
 	</script>
 </head>
 <body>
@@ -188,6 +210,16 @@
 			</td>
 			<td>
 				<button onclick="javascript:checkExample3();">Example 3</button>
+			</td>
+		</tr>
+		
+		<!-- EXAMPLE 4 -->
+		<tr>
+			<td>
+				<input type="text" id="example4" />
+			</td>
+			<td>
+				<button id="btn-example4">Example 4</button>
 			</td>
 		</tr>
 	</table>
