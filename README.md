@@ -15,7 +15,7 @@ The generated JavaScript may either invoke a callback function with a name defin
 ```php
 require 'JSONP.class.php';
 JSONP::output(array('foo' => 'bar'));
-``
+```
 
 ### jQuery call
 ```javascript
