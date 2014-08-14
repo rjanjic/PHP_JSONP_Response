@@ -1,11 +1,11 @@
 <?php
 /******************************************************************
 * Projectname:   PHP JSON-P Class 
-* Version:       1.1
+* Version:       1.0
 * Author:        Radovan Janjic <rade@it-radionica.com>
-* Project:       https://github.com/uzi88/PHP_JSONP_Response
-* Last modified: 14 08 2014
+* Last modified: 10 05 2013
 * Copyright (C): 2013 IT-radionica.com, All Rights Reserved
+* Project:       https://github.com/uzi88/PHP_JSONP_Response
 *
 * GNU General Public License (Version 2, June 1991)
 *
@@ -31,48 +31,41 @@
 * http://en.wikipedia.org/wiki/JSONP
 *
 * Example:
-* 
-* // JSON encode data
-* $json_encoded = JSONP::encode(array('foo', 'bar'));
-* 
-* // JSONP string as returned value
-* $jsonp_encoded = JSONP::output(array('foo', 'bar'), FALSE);
-* 
-* // Print output
-* JSONP::output(array('foo', 'bar'));
 *
-* // Pprint output without headers
-* JSONP::output(array('foo', 'bar'), TRUE, FALSE);
+* $JSONP = new JSONP;
+* $JSONP->encode(array('asdf', 'asfd'));
 *
 ******************************************************************/
 
-final class JSONP {
-	
-	/** Ignore errors
-	 * @var boolean
-	 */
-	public static $ignoreErrors = TRUE;
-	
+class JSONP {
+
 	/** Javascript callback function name
 	 * @var string
 	 */
-	public static $paramCallback = 'callback';
+	var $paramCallback = 'callback';
 	
 	/** Javascript assinged variable name
 	 * @var string
 	 */
-	public static $paramAssign = 'assing';
+	var $paramAssign = 'assing';
 	
-	/** Javascript callback REGEX
+	/** Javascript variable name REGEX
 	 * @var string
 	 */
-	private static $cbRegex = '/^[\p{L}\p{Nl}$_][\p{L}\p{Nl}$\p{Mn}\p{Mc}\p{Nd}\p{Pc}\.]*(?<!\.)$/i';
-
-	/** JSON encode
-	 * @param mixed $data
-	 * @return JSON formated string
+	var $jsVarName = '/^[\p{L}\p{Nl}$_][\p{L}\p{Nl}$\p{Mn}\p{Mc}\p{Nd}\p{Pc}]*$/i';
+	
+	/** Javascript function name REGEX
+	 * @var string
 	 */
-	public static function encode($data) {
+	var $jsFuncName = '/^[$A-Z_][0-9A-Z_\.$]*$/i';
+
+	/** JSON-P encode and print with headers
+	 * @param mixed $data
+	 * @param boolean $print
+	 * @param boolean $header
+	 * @return JSON-P formated string
+	 */
+	function encode($data, $print = TRUE, $header = TRUE) {
 		// Define json_encode for PHP < 5.2
 		if (!function_exists('json_encode')) {
 			function json_encode($data) {
@@ -105,44 +98,22 @@ final class JSONP {
 				}
 			}
 		}
-		// Return JSON formated string
-		return json_encode($data);
-	}
-	
-	/** JSON-P encode and print with headers
-	 * @param mixed $data
-	 * @param boolean $print
-	 * @param boolean $header
-	 * @return JSON-P formated string
-	 */
-	 public static function output($data, $print = TRUE, $headers = TRUE) {
-	 	$jsonp = TRUE;
+		
 		$return = NULL;
-		if(isset($_GET[self::$paramCallback]) && !empty($_GET[self::$paramCallback])) {
-			// Callback function
-			if (@preg_match(self::$cbRegex, $_GET[self::$paramCallback], $callback)) {
-				$return = $callback[0]. '(' . self::encode($data) . ');';
-			} else if (!self::$ignoreErrors) {
-				throw new Exception('Invalid callback function name.');
-			}
+		$jsonp = TRUE;
+		if(isset($_GET[$this->paramCallback]) && @preg_match($this->jsFuncName, $_GET[$this->paramCallback], $callback)) {
+			$return = $callback[0]. '(' . json_encode($data) . ');';
 		} else {
-			if (isset($_GET[self::$paramAssign]) && !empty($_GET[self::$paramAssign])) {
-				// Assign to variable
-				if (@preg_match(self::$cbRegex, $_GET[self::$paramAssign], $assign)) {
-					$return = 'var ' . $assign[0] . ' = ' . self::encode($data) . ';';
-				} else if (!self::$ignoreErrors) {
-					throw new Exception('Invalid assign variable name.');
-				}
+			if (isset($_GET[$this->paramAssign]) && @preg_match($this->jsVarName, $_GET[$this->paramAssign], $assign)) {
+				$return = 'var ' . $assign[0] . ' = ' . json_encode($data) . ';';
 			} else {
-				// Clean JSON
 				$jsonp = FALSE;
-				$return = self::encode($data);
+				$return = json_encode($data);
 			}
 		}
 		
 		if ($print) {
-			// Print headers
-			if ($headers) {
+			if ($header) {
 				header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 				header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 				header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -150,11 +121,9 @@ final class JSONP {
 				header("Pragma: no-cache");
 				header("Content-Type: application/" . ($jsonp ? "javascript" : "json"));
 			}
-			// Print output
 			echo $return;
 		} else {
-			// Return JSON-P formated string
 			return $return;
 		}
-	 }
+	}
 }

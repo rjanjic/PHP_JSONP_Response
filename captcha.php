@@ -4,7 +4,7 @@
 * Simple captcha script used for JSONP example.
 *
 */
-include 'JSONP.class.php';
+require 'JSONP.class.php';
 
 function hex2rgb($hex) {
    $hex = str_replace('#', NULL, $hex);
@@ -32,11 +32,10 @@ function validateHexColor($hex) {
 session_start();
 
 if (isset($_GET['expected'])) {
-	$JSONP = new JSONP;
 	if ($_GET['expected'] == $_SESSION['expected']) {
-		$JSONP->encode(TRUE);
+		JSONP::output(TRUE);
 	} else {
-		$JSONP->encode(FALSE);
+		JSONP::output(FALSE);
 	}
 } else {
 	// Background color
