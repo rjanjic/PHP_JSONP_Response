@@ -56,7 +56,7 @@ class JSONP {
 	/** Javascript function name REGEX
 	 * @var string
 	 */
-	var $jsFuncName = '/^[$A-Z_][0-9A-Z_$]*$/i';
+	var $jsFuncName = '/^[$A-Z_][0-9A-Z_\.$]*$/i';
 
 	/** JSON-P encode and print with headers
 	 * @param mixed $data
