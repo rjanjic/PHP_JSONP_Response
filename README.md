@@ -14,6 +14,8 @@ The generated JavaScript may either invoke a callback function with a name defin
 ### PHP
 ```php
 require 'JSONP.class.php';
+
+// Print output with correct headers informations
 JSONP::output(array('foo' => 'bar'));
 ```
 
